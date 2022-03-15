@@ -2,8 +2,8 @@
   {
     "name": "Saga",
     "shortUrl": "https://www.falabella.com.pe/falabella-pe/category/cat50678/Computadoras?isPLP=1&page=",
-    "scriptName": "saga",
-    "pages": "50",
+    "scriptName": "falabella",
+    "pages": "10",
     "selectors": {
       "productListTag": ".pod > .pod-details > a"
     }

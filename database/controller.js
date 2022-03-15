@@ -1,12 +1,12 @@
 const conexion = require('./connection')
 
 module.exports = {
-  async insertProduct(title, link, category, offerPrice, normalPrice) {
+  async insertProduct(title, link, store, category, offerPrice, normalPrice) {
     let resultados = await conexion.query(`insert into products
-      (title, link, category, offerPrice, normalPrice)
+      (title, link, store, category, offerPrice, normalPrice)
       values
-      ($1, $2, $3, $4, $5)
-      RETURNING id`, [title, link, category, offerPrice, normalPrice])
+      ($1, $2, $3, $4, $5, $6)
+      RETURNING id`, [title, link, store, category, offerPrice, normalPrice])
     return resultados.rows[0].id
   },
 

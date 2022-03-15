@@ -16,7 +16,9 @@ module.exports = async (page, website) => {
   
   let results = []
   let fails = []
+  let success = []
 
+  // Iteracion para recorrer la paginacion
   for (let index = 1; index <= pages; index++) {
     let link = `${shortUrl}${index}`
 
@@ -39,8 +41,8 @@ module.exports = async (page, website) => {
   // Eliminamos elementos repetidos
   let productLinks = [...new Set(results)]
   console.log(productLinks.length)
-  let info = []
 
+  // Iteracion para recorrer el arreglo de productos
   for (let index = 0; index < productLinks.length; index++) {
     console.log(productLinks[index])
     try {
@@ -82,8 +84,8 @@ module.exports = async (page, website) => {
 
       // Save data in database
       await save(productLinks[index], product)
+      success.push(productLinks[index])
       console.log(index, product)
-      info.push(product)
     } catch (error) {
       fails.push(productLinks[index])
       console.log(error)
@@ -96,6 +98,7 @@ module.exports = async (page, website) => {
         .insertProduct(
           product.title,
           link,
+          website.scriptName,
           product.category,
           parseFloat(product.offerPrice),
           parseFloat(product.normalPrice))
@@ -121,8 +124,8 @@ module.exports = async (page, website) => {
   }
 
   fs.writeFileSync(
-    path.join(__dirname, '..', 'fails', `${website.scriptName}.json`),
-    JSON.stringify(fails, null, 4),
+    path.join(__dirname, '..', 'register', `${website.scriptName}.json`),
+    JSON.stringify({success, fails}, null, 4),
     'utf8'
   )
 
