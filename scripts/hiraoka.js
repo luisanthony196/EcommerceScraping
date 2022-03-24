@@ -3,30 +3,43 @@ const path = require('path')
 const {insert} = require('../database/controller')
 
 module.exports = async (page, website) => {
-  const {shortUrl, pages, selectors} = website
+  const {shortUrl, categoryList} = website
   
   let results = []
   let fails = []
   let success = []
 
   // Iteracion para recorrer la paginacion
-  for (let index = 1; index <= pages; index++) {
-    let link = `${shortUrl}${index}`
+  for (const cat of categoryList) {
+    await prom(`${shortUrl}/${cat}`, '#toolbar-amount > span')
+    let pages = await page.evaluate(() => {
+      let total = document
+        .querySelector('#toolbar-amount > span')
+        .innerText
+      return Math.ceil(total/20)
+    })
+    if (pages > 2) {pages = 2}
+    // console.log(total, Math.ceil(total/20))
 
-    await prom(link, selectors.productListTag)
+    for (let index = 1; index <= pages; index++) {
+      let link = `${shortUrl}/${cat}?p=${index}`
 
-    const grid_products = await page.evaluate((productListTag) => {
-      const productList = document.querySelectorAll(productListTag)
-      const productData = []
+      await prom(link, ".product > .product-item-info > a")
 
-      for (const product of productList) {
-        productData.push(product.href)
-      }
+      const grid_products = await page.evaluate((productListTag) => {
+        const productList = document.querySelectorAll(productListTag)
+        const productData = []
 
-      return productData
-    }, selectors.productListTag)
+        for (const product of productList) {
+          productData.push(product.href)
+        }
 
-    results = results.concat(grid_products)
+        return productData
+      }, ".product > .product-item-info > a")
+
+      results = results.concat(grid_products)
+    }
+    
   }
 
   // Eliminamos elementos repetidos
@@ -37,44 +50,47 @@ module.exports = async (page, website) => {
   for (let index = 0; index < productLinks.length; index++) {
     console.log(productLinks[index])
     try {
-      await prom(productLinks[index], '.prices > ol > li.prices-0 > div > span')
+      await prom(productLinks[index], '.product.media .fotorama__stage > div.fotorama__stage__shaft > div')
+      // await prom(productLinks[index], '.product.media .fotorama__stage > .fotorama__stage__shaft > .fotorama__active > img')
+      // await prom(productLinks[index], '.product-info-main > .product-info-price > .price-box .price-container > .price-wrapper')
+
+      let category = productLinks[index].match(/([A-z-]+)(\/[A-z0-9-.]+)$/)[1]
 
       const product = await page.evaluate(() => {
         let title = document
-          .querySelector('.product-name')
+          .querySelector('.product-info-main > .product > h1 > span')
           .innerText
         let available = document
-          .querySelector('.stock-quantity')
+          .querySelector('.conteo-cart')
           .innerText
-        let category = document
-          .querySelector('#breadcrumb > ol > li:last-child > a')
-          .innerText
-        let offerPrice = document
-          .querySelector('.prices > ol > li.prices-0 > div > span')
-          .innerText.match(/([\d.,]+)/)[1].replace(',', '')
-        let normalPrice = document
-          .querySelector('.prices > ol > li.prices-1 > div > span')
-        if (normalPrice != null)
-          normalPrice = normalPrice
-            .innerHTML.match(/([\d.,]+)/)[1].replace(',', '')
+        let allPrices = document
+          .querySelectorAll('.product-info-main > .product-info-price > .price-box .price-container > .price-wrapper')
+        let offerPrice = allPrices[0].getAttribute('data-price-amount')
+        let normalPrice = null
+        if (allPrices[1] != null)
+          normalPrice = allPrices[1].getAttribute('data-price-amount')
         let specifications_list = document
-          .querySelectorAll('.specification > .container > .bodyContainer > table > tbody > tr')
+          .querySelectorAll('.hiraoka-product-details-datasheet > div > table > tbody > tr')
         let specifications = []
         for (const specification of specifications_list) {
-          caracteristica = specification.children[0].innerHTML
+          caracteristica = specification.children[0].innerHTML.trim()
+          if (caracteristica == 'Precio') continue
           detalle = specification.children[1].innerHTML
+          // caracteristica = specification.children[0].innerHTML
+          // detalle = specification.innerHTML.match(/\:\s(.+)/)[1]
           specifications.push({caracteristica, detalle})
         }
         let images_list = document
-          .querySelectorAll('.pdp-image-section .image-slider > div > div > img')
+          .querySelectorAll('.product.media .fotorama__stage > .fotorama__stage__shaft > div > img')
         let images = []
         for (const image of images_list) {
           images.push(image.src)
         }
-        return {title, available, category, offerPrice, normalPrice, specifications, images}
+        return {title, available, offerPrice, normalPrice, specifications, images}
       })
 
       // Save data in database
+      product['category'] = category
       await save(productLinks[index], product)
       success.push(productLinks[index])
       console.log(index, product)
