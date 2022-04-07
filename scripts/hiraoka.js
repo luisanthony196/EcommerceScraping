@@ -18,7 +18,7 @@ module.exports = async (page, website) => {
         .innerText
       return Math.ceil(total/20)
     })
-    if (pages > 2) {pages = 2}
+    if (pages > 1) {pages = 1}
     // console.log(total, Math.ceil(total/20))
 
     for (let index = 1; index <= pages; index++) {

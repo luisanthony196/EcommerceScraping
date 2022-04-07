@@ -6,8 +6,9 @@ CREATE DATABASE scraping;
 CREATE TABLE products(
   id SERIAL,
   title VARCHAR NOT NULL,
-  store VARCHAR NOT NULL,
   link VARCHAR NOT NULL,
+  store VARCHAR NOT NULL,
+  available VARCHAR NOT NULL,
   category VARCHAR NOT NULL,
   offerprice NUMERIC(7,2) NOT NULL,
   normalprice NUMERIC(7,2),
@@ -19,22 +20,24 @@ CREATE TABLE products(
 CREATE TABLE specifications(
   id SERIAL,
   product_id INT NOT NULL,
-  feature VARCHAR
-  detail VARCHAR
-  created_at TIMESTAMP NOT NULL DEFAULT NOW()
-  updated_at TIMESTAMP NOT NULL DEFAULT NOW()
-  PRIMARY KEY(id)
+  feature VARCHAR,
+  detail VARCHAR,
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  PRIMARY KEY(id),
   CONSTRAINT fk_product FOREIGN KEY(product_id) REFERENCES products(id)
 );
 
-CREATE TABLE images( id SERIAL
-  product_id INT NOT NULL
-  src VARCHAR NOT NULL
-  created_at TIMESTAMP NOT NULL DEFAULT NOW()
-  updated_at TIMESTAMP NOT NULL DEFAULT NOW()
-  PRIMARY KEY(id)
+CREATE TABLE images(
+  id SERIAL,
+  product_id INT NOT NULL,
+  src VARCHAR NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  PRIMARY KEY(id),
   CONSTRAINT fk_product FOREIGN KEY(product_id) REFERENCES products(id)
 );
+
 # See tables
 SELECT * FROM pg_catalog.pg_tables WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema';
 
