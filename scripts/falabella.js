@@ -61,8 +61,8 @@ module.exports = async (page, website) => {
           .querySelectorAll('.specification > .container > .bodyContainer > table > tbody > tr')
         let specifications = []
         for (const specification of specifications_list) {
-          caracteristica = specification.children[0].innerHTML
-          detalle = specification.children[1].innerHTML
+          let caracteristica = specification.children[0].innerHTML
+          let detalle = specification.children[1].innerHTML
           specifications.push({caracteristica, detalle})
         }
         let images_list = document

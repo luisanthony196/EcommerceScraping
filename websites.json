@@ -22,3 +22,16 @@
     ]
   }
 ]
+
+  {
+    "name": "Saga",
+    "shortUrl": "https://www.falabella.com.pe/falabella-pe/category",
+    "scriptName": "saga",
+    "elemPorPag": 48,
+    "categoryList": [
+      {
+        "name": "accesorios",
+        "url": "cat40509/Accesorios-Computacion"
+      }
+    ]
+  },

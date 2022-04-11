@@ -1,0 +1,73 @@
+[
+  {
+    "name": "Saga",
+    "shortUrl": "https://www.falabella.com.pe/falabella-pe/category",
+    "scriptName": "saga",
+    "elemPorPag": 48,
+    "categoryList": [
+      {
+        "name": "accesorios",
+        "url": "cat40509/Accesorios-Computacion"
+      },
+      {
+        "name": "almacenamiento",
+        "url": "cat40480/Almacenamiento"
+      },
+      {
+        "name": "all-in-one",
+        "url": "cat1590484/All-In-One"
+      },
+      {
+        "name": "impresoras",
+        "url": "cat3180533/Impresoras-y-Multifuncionales"
+      },
+      {
+        "name": "laptops",
+        "url": "cat40712/Laptops"
+      },
+      {
+        "name": "laptop-gamer",
+        "url": "cat6370538/Laptops-Gamer"
+      },
+      {
+        "name": "tablets",
+        "url": "cat270476/Tablets"
+      }
+    ]
+  },
+  {
+    "name": "Hiraoka",
+    "shortUrl": "https://hiraoka.com.pe/computo-y-tecnologia",
+    "scriptName": "hiraoka",
+    "categoryList": [
+      {
+        "name": "laptops",
+        "url": "computadoras/laptops?p"
+      },
+      {
+        "name": "all-in-one",
+        "url": "computadoras/all-in-one?p"
+      },
+      {
+        "name": "laptop-gamer",
+        "url": "computadoras/laptop-gamer?p"
+      },
+      {
+        "name": "tablets",
+        "url": "computadoras/tablets?p"
+      },
+      {
+        "name": "accesorios",
+        "url": "accesorios-computo?cat=1095%2C1400%2C1116%2C879&p"
+      },
+      {
+        "name": "almacenamiento",
+        "url": "accesorios-computo?cat=1128%2C846%2C1346&p"
+      },
+      {
+        "name": "impresoras",
+        "url": "impresoras-y-tintas?p"
+      }
+    ]
+  }
+]
